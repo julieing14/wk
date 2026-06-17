@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — Web Hotel [Tu Proyecto]</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand-dark: #1a1a1a;
+    --brand-gold: #0d703d;
+    --brand-gold-light: #dcd1b2;
+    --brand-cream: #f7f4ef;
+    --zone-bg: #e8f4fd;
+    --zone-border: #5bacd8;
+    --zone-text: #0d703d;
+    --zone-label-bg: #0d703d;
+    --overlay-bg: rgba(91,172,216,0.18);
+    --panel-bg: #f0f0f0;
+    --panel-border: #d0d0d0;
+    font-family: 'Georgia', serif;
+  }
+
+  body { background: #fff; color: #222; }
+
+  /* ── PANEL LATERAL ── */
+  #panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: 300px; height: 100vh;
+    background: var(--panel-bg);
+    border-left: 1px solid var(--panel-border);
+    overflow-y: auto;
+    z-index: 9999;
+    padding: 1.2rem 1rem;
+    font-family: 'Arial', sans-serif;
+    transition: transform 0.3s;
+  }
+  #panel.hidden { transform: translateX(300px); }
+  #panel h2 { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  #panel .legend-item {
+    background: #fff;
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.5rem;
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  #panel .legend-item:hover { background: #e0eef7; }
+  #panel .legend-item.active { background: var(--zone-bg); border-color: var(--zone-border); }
+  #panel .legend-item .zone-id { font-weight: 700; color: var(--zone-text); font-size: 12px; }
+  #panel .legend-item .zone-desc { color: #555; margin-top: 2px; line-height: 1.4; }
+  #panel .legend-item .zone-spec { color: #888; font-size: 10.5px; margin-top: 3px; font-style: italic; }
+  #toggle-panel {
+    position: fixed;
+    top: 50%;
+    right: 300px;
+    transform: translateY(-50%);
+    background: var(--zone-label-bg);
+    color: #fff;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    padding: 8px 6px;
+    cursor: pointer;
+    font-size: 11px;
+    writing-mode: vertical-rl;
+    z-index: 10000;
+    letter-spacing: 0.05em;
+    font-family: 'Arial', sans-serif;
+    transition: right 0.3s;
+  }
+  #toggle-panel.closed { right: 0; border-radius: 6px 0 0 6px; }
+
+  /* ── MOCKUP WRAPPER ── */
+  #mockup-page { margin-right: 300px; transition: margin-right 0.3s; }
+  #mockup-page.full-width { margin-right: 0; }
+
+  /* ── ZONAS DE IMAGEN ── */
+  .img-zone {
+    position: relative;
+    background: var(--zone-bg);
+    border: 2px dashed var(--zone-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    overflow: hidden;
+  }
+  .img-zone:hover { background: #d4ecf7; }
+  .img-zone.highlight { background: #b8e0f5; border-color: #2980b9; }
+  .img-zone .zone-tag {
+    position: absolute;
+    top: 8px; left: 8px;
+    background: var(--zone-label-bg);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+    z-index: 2;
+  }
+  .img-zone .zone-info {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    padding: 1rem;
+  }
+  .img-zone .zone-name { font-size: 13px; font-weight: 700; color: var(--zone-text); }
+  .img-zone .zone-dims { font-size: 11px; color: #5a8fa8; margin-top: 4px; }
+  .img-zone .zone-hint { font-size: 11px; color: #7aabca; margin-top: 6px; font-style: italic; }
+  .img-zone .zone-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.5; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--brand-dark);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: #aaa;
+  }
+  .header a { color: #ccc; text-decoration: none; margin-left: 12px; }
+
+  .nav {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo-zone {
+    width: 160px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--zone-border);
+    background: var(--zone-bg);
+    border-radius: 4px;
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--zone-text);
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .logo-zone:hover { background: #d4ecf7; }
+  .logo-zone .zone-tag { position: absolute; top: 3px; left: 4px; background: var(--zone-label-bg); color: #fff; font-size: 9px; padding: 1px 5px; border-radius: 3px; }
+  .nav-links { display: flex; gap: 1.5rem; font-family: 'Arial', sans-serif; font-size: 13px; color: #444; }
+  .nav-links span { cursor: pointer; } .nav-links span:hover { color: var(--brand-gold); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 560px;
+    overflow: hidden;
+  }
+  .hero .img-zone { width: 100%; height: 100%; }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.45));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .hero-title { font-size: 2.8rem; color: #fff; text-align: center; text-shadow: 0 2px 12px rgba(0,0,0,0.5); font-style: italic; }
+  .hero-subtitle { color: var(--brand-gold-light); font-family: 'Arial', sans-serif; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 12px; }
+  .hero-cta { margin-top: 24px; padding: 12px 32px; background: var(--brand-gold); color: #fff; font-family: 'Arial', sans-serif; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; border-radius: 2px; }
+
+  /* ── SECCIONES GENERALES ── */
+  section { padding: 4rem 2rem; }
+  .section-eyebrow { font-family: 'Arial', sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 0.5rem; }
+  .section-title { font-size: 2rem; color: var(--brand-dark); margin-bottom: 1rem; }
+  .section-body { font-size: 15px; color: #555; line-height: 1.8; max-width: 680px; }
+
+  /* ── ABOUT ── */
+  .about { background: var(--brand-cream); }
+  .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; max-width: 1100px; margin: 0 auto; }
+  .about-text .amenities { display: flex; gap: 2rem; margin-top: 2rem; }
+  .amenity { text-align: center; font-family: 'Arial', sans-serif; font-size: 12px; color: #666; }
+  .amenity-icon { width: 48px; height: 48px; background: #e0d4c0; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+
+  /* ── HABITACIONES ── */
+  .rooms { background: #fff; }
+  .rooms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; max-width: 1100px; }
+  .room-card { border: 1px solid #e8e8e8; border-radius: 4px; overflow: hidden; }
+  .room-card-img { height: 200px; }
+  .room-card-body { padding: 1rem; font-family: 'Arial', sans-serif; }
+  .room-card-title { font-size: 14px; font-weight: 700; color: #222; margin-bottom: 6px; }
+  .room-card-desc { font-size: 12px; color: #777; line-height: 1.5; }
+  .room-card-cta { display: inline-block; margin-top: 10px; font-size: 11px; color: var(--brand-gold); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ── GALERÍA ── */
+  .gallery { background: var(--brand-cream); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 2rem; max-width: 1100px; }
+  .gallery-grid .img-zone { height: 180px; border-radius: 3px; }
+  .gallery-cta { margin-top: 1.5rem; font-family: 'Arial', sans-serif; font-size: 12px; color: var(--brand-gold); letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; }
+
+  /* ── VIDEO ── */
+  .video-section { background: var(--brand-dark); padding: 4rem 2rem; }
+  .video-section .section-eyebrow { color: var(--brand-gold-light); }
+  .video-section .section-title { color: #fff; }
+  .video-zone-wrap { margin-top: 2rem; max-width: 800px; }
+  .video-zone { height: 420px; border-radius: 4px; }
+  .video-zone .zone-icon { font-size: 48px; }
+
+  /* ── TESTIMONIOS ── */
+  .testimonios { background: #fff; }
+  .test-slider { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; max-width: 1100px; }
+  .test-card { border-left: 3px solid var(--brand-gold); padding-left: 1rem; }
+  .test-text { font-size: 14px; color: #555; line-height: 1.7; font-style: italic; }
+  .test-author { font-family: 'Arial', sans-serif; font-size: 12px; color: var(--brand-gold); margin-top: 8px; font-weight: 700; }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--brand-dark); color: #aaa; padding: 3rem 2rem; font-family: 'Arial', sans-serif; font-size: 13px; }
+  .footer-inner { display: grid; grid-template-columns: 200px 1fr 1fr; gap: 3rem; max-width: 1100px; margin: 0 auto; }
+  .footer-logo-zone { width: 120px; height: 50px; }
+  .footer h4 { color: #fff; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
+  .footer p { line-height: 1.8; color: #888; }
+  .footer-copy { text-align: center; color: #555; font-size: 11px; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; max-width: 1100px; margin-left: auto; margin-right: auto; }
+
+  /* ── TOOLTIP al hacer click ── */
+  #tooltip {
+    position: fixed;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 99999;
+    display: none;
+    max-width: 260px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    #panel { display: none; }
+    #toggle-panel { display: none; }
+    #mockup-page { margin-right: 0; }
+    .about-inner, .rooms-grid, .gallery-grid, .test-slider, .footer-inner { grid-template-columns: 1fr; }
+    .hero { height: 360px; }
+    .hero-title { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="tooltip"></div>
+
+<!-- PANEL LATERAL -->
+<aside id="panel">
+  <h2>📋 Guía de recursos gráficos</h2>
+  <p style="font-family:Arial,sans-serif;font-size:11px;color:#888;margin-bottom:1rem;line-height:1.5;">Hacé clic en cualquier zona azul del mockup para destacarla, o usá esta lista para navegar.</p>
+  <div id="legend-list"></div>
+  <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #ccc;font-family:Arial,sans-serif;font-size:10.5px;color:#999;line-height:1.6;">
+    <strong style="color:#555;">Convención de nombres:</strong><br>
+    Carpeta compartida → <code style="background:#e8e8e8;padding:1px 4px;border-radius:3px;">SECCION_NRO_descripcion.ext</code><br><br>
+    Ejemplo: <code style="background:#e8e8e8;padding:1px 4px;border-radius:3px;">HERO_01_vista-exterior.jpg</code>
+  </div>
+</aside>
+
+<button id="toggle-panel" onclick="togglePanel()">◀ Panel</button>
+
+<!-- MOCKUP PAGE -->
+<div id="mockup-page">
+
+  <!-- TOP BAR -->
+  <div class="header">
+    <span>📍 Dirección del hotel · Sierra de los Padres, Argentina</span>
+    <div>
+      <a href="#">+54 9 223 3-423392</a>
+      <a href="#">reservas@tuhotel.com</a>
+      <a href="#">FB</a> <a href="#">IG</a>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="logo-zone filled" data-zone="LOGO_01" onclick="highlightZone('LOGO_01')" style="background:#fff;border-color:#5bacd8;">
+      <span class="zone-tag">LOGO_01</span>
+      <img src="assets/LOGO_01.png" alt="Hotel Waynay Killa" style="max-width:90%;max-height:80%;object-fit:contain;">
+    </div>
+    <div class="nav-links">
+      <span>Inicio</span>
+      <span>Habitaciones ▾</span>
+      <span>Servicios</span>
+      <span>Galería</span>
+      <span>Contacto</span>
+    </div>
+    <button style="background:var(--brand-gold);color:#fff;border:none;padding:8px 18px;font-family:Arial,sans-serif;font-size:12px;cursor:pointer;letter-spacing:0.05em;">RESERVAR</button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="img-zone" style="height:100%;" data-zone="HERO_01" onclick="highlightZone('HERO_01')">
+      <span class="zone-tag">HERO_01</span>
+      <div class="zone-info">
+        <div class="zone-icon">🖼️</div>
+        <div class="zone-name">Imagen principal del hero</div>
+        <div class="zone-dims">1920 × 560 px — JPG</div>
+        <div class="zone-hint">Vista panorámica del exterior / paisaje del hotel</div>
+      </div>
+    </div>
+    <div class="hero-overlay">
+      <p class="hero-subtitle">Bienvenidos a</p>
+      <h1 class="hero-title">Hotel Waynay Killa</h1>
+      <button class="hero-cta">Reservar habitación</button>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <div class="about-inner">
+      <div class="about-text">
+        <p class="section-eyebrow">Nuestra historia</p>
+        <h2 class="section-title">El nombre de tu hotel</h2>
+        <p class="section-body">Texto institucional sobre la historia y propuesta del hotel. Esta sección es editorial — no requiere imágenes propias en el fondo, pero sí la foto lateral (ABOUT_01).</p>
+        <div class="amenities">
+          <div class="amenity"><div class="amenity-icon">🍳</div>Desayuno buffet</div>
+          <div class="amenity"><div class="amenity-icon">🌿</div>Entorno natural</div>
+          <div class="amenity"><div class="amenity-icon">🏊</div>Pileta externa</div>
+        </div>
+      </div>
+      <div class="img-zone" style="height:360px;border-radius:4px;" data-zone="ABOUT_01" onclick="highlightZone('ABOUT_01')">
+        <span class="zone-tag">ABOUT_01</span>
+        <div class="zone-info">
+          <div class="zone-icon">🖼️</div>
+          <div class="zone-name">Foto institucional lateral</div>
+          <div class="zone-dims">800 × 720 px — JPG</div>
+          <div class="zone-hint">Exterior, jardín o ambiente característico del hotel</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HABITACIONES -->
+  <section class="rooms">
+    <p class="section-eyebrow">Alojamiento</p>
+    <h2 class="section-title">Nuestras Habitaciones</h2>
+    <div class="rooms-grid">
+
+      <div class="room-card">
+        <div class="img-zone room-card-img" data-zone="HAB_01" onclick="highlightZone('HAB_01')">
+          <span class="zone-tag">HAB_01</span>
+          <div class="zone-info">
+            <div class="zone-name">Hab. Doble Premium</div>
+            <div class="zone-dims">800 × 400 px — JPG</div>
+          </div>
+        </div>
+        <div class="room-card-body">
+          <div class="room-card-title">Habitación Doble Premium</div>
+          <div class="room-card-desc">Descripción breve de la habitación con sus características principales.</div>
+          <div class="room-card-cta">Ver detalles →</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="img-zone room-card-img" data-zone="HAB_02" onclick="highlightZone('HAB_02')">
+          <span class="zone-tag">HAB_02</span>
+          <div class="zone-info">
+            <div class="zone-name">Hab. Doble Twin</div>
+            <div class="zone-dims">800 × 400 px — JPG</div>
+          </div>
+        </div>
+        <div class="room-card-body">
+          <div class="room-card-title">Habitación Doble Twin</div>
+          <div class="room-card-desc">Descripción breve de la habitación con sus características principales.</div>
+          <div class="room-card-cta">Ver detalles →</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="img-zone room-card-img" data-zone="HAB_03" onclick="highlightZone('HAB_03')">
+          <span class="zone-tag">HAB_03</span>
+          <div class="zone-info">
+            <div class="zone-name">Departamento Premium</div>
+            <div class="zone-dims">800 × 400 px — JPG</div>
+          </div>
+        </div>
+        <div class="room-card-body">
+          <div class="room-card-title">Departamento Premium</div>
+          <div class="room-card-desc">Descripción breve de la habitación con sus características principales.</div>
+          <div class="room-card-cta">Ver detalles →</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="img-zone room-card-img" data-zone="HAB_04" onclick="highlightZone('HAB_04')">
+          <span class="zone-tag">HAB_04</span>
+          <div class="zone-info">
+            <div class="zone-name">Depto. Doble de Lujo</div>
+            <div class="zone-dims">800 × 400 px — JPG</div>
+          </div>
+        </div>
+        <div class="room-card-body">
+          <div class="room-card-title">Depto. Doble de Lujo</div>
+          <div class="room-card-desc">Descripción breve de la habitación con sus características principales.</div>
+          <div class="room-card-cta">Ver detalles →</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="img-zone room-card-img" data-zone="HAB_05" onclick="highlightZone('HAB_05')">
+          <span class="zone-tag">HAB_05</span>
+          <div class="zone-info">
+            <div class="zone-name">Depto. Triple de Lujo</div>
+            <div class="zone-dims">800 × 400 px — JPG</div>
+          </div>
+        </div>
+        <div class="room-card-body">
+          <div class="room-card-title">Depto. Triple de Lujo</div>
+          <div class="room-card-desc">Descripción breve de la habitación con sus características principales.</div>
+          <div class="room-card-cta">Ver detalles →</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="img-zone room-card-img" data-zone="HAB_06" onclick="highlightZone('HAB_06')">
+          <span class="zone-tag">HAB_06</span>
+          <div class="zone-info">
+            <div class="zone-name">Hab. Accesible</div>
+            <div class="zone-dims">800 × 400 px — JPG</div>
+          </div>
+        </div>
+        <div class="room-card-body">
+          <div class="room-card-title">Habitación Accesible</div>
+          <div class="room-card-desc">Descripción breve de la habitación con sus características principales.</div>
+          <div class="room-card-cta">Ver detalles →</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <section class="gallery">
+    <p class="section-eyebrow">Fotos del hotel</p>
+    <h2 class="section-title">Galería</h2>
+    <div class="gallery-grid">
+      <div class="img-zone" style="height:180px;border-radius:3px;" data-zone="GAL_01" onclick="highlightZone('GAL_01')">
+        <span class="zone-tag">GAL_01</span>
+        <div class="zone-info"><div class="zone-name">Galería 1</div><div class="zone-dims">600 × 360 px</div></div>
+      </div>
+      <div class="img-zone" style="height:180px;border-radius:3px;" data-zone="GAL_02" onclick="highlightZone('GAL_02')">
+        <span class="zone-tag">GAL_02</span>
+        <div class="zone-info"><div class="zone-name">Galería 2</div><div class="zone-dims">600 × 360 px</div></div>
+      </div>
+      <div class="img-zone" style="height:180px;border-radius:3px;" data-zone="GAL_03" onclick="highlightZone('GAL_03')">
+        <span class="zone-tag">GAL_03</span>
+        <div class="zone-info"><div class="zone-name">Galería 3</div><div class="zone-dims">600 × 360 px</div></div>
+      </div>
+      <div class="img-zone" style="height:180px;border-radius:3px;" data-zone="GAL_04" onclick="highlightZone('GAL_04')">
+        <span class="zone-tag">GAL_04</span>
+        <div class="zone-info"><div class="zone-name">Galería 4</div><div class="zone-dims">600 × 360 px</div></div>
+      </div>
+      <div class="img-zone" style="height:180px;border-radius:3px;" data-zone="GAL_05" onclick="highlightZone('GAL_05')">
+        <span class="zone-tag">GAL_05</span>
+        <div class="zone-info"><div class="zone-name">Galería 5</div><div class="zone-dims">600 × 360 px</div></div>
+      </div>
+      <div class="img-zone" style="height:180px;border-radius:3px;" data-zone="GAL_06" onclick="highlightZone('GAL_06')">
+        <span class="zone-tag">GAL_06</span>
+        <div class="zone-info"><div class="zone-name">Galería 6</div><div class="zone-dims">600 × 360 px</div></div>
+      </div>
+    </div>
+    <p class="gallery-cta">→ Ver galería completa</p>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="video-section">
+    <p class="section-eyebrow">Conocé el hotel</p>
+    <h2 class="section-title" style="color:#fff;">Video institucional</h2>
+    <div class="video-zone-wrap">
+      <div class="img-zone video-zone" data-zone="VIDEO_01" onclick="highlightZone('VIDEO_01')" style="background:rgba(91,172,216,0.12);border-color:#5bacd8;">
+        <span class="zone-tag">VIDEO_01</span>
+        <div class="zone-info">
+          <div class="zone-icon">▶️</div>
+          <div class="zone-name" style="color:#7ec8e8;">Video principal</div>
+          <div class="zone-dims" style="color:#5bacd8;">MP4 / embed YouTube — 16:9</div>
+          <div class="zone-hint" style="color:#4a9ab8;">Video institucional o recorrido del hotel</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="testimonios">
+    <p class="section-eyebrow">Lo que dicen nuestros huéspedes</p>
+    <h2 class="section-title">Comentarios</h2>
+    <div class="test-slider">
+      <div class="test-card">
+        <p class="test-text">"Haras es un lugar mágico, desde su campo hasta su atención lo hacen único. Pasamos un finde hermoso, rodeado de naturaleza."</p>
+        <p class="test-author">Lucila — Google</p>
+      </div>
+      <div class="test-card">
+        <p class="test-text">"El hotel es muy lindo, el lugar es increíble, pero lo mejor de todo es la gente. Carlos y Cristina fueron muy atentos."</p>
+        <p class="test-author">Marina — Booking</p>
+      </div>
+      <div class="test-card">
+        <p class="test-text">"Volvería, sin lugar a dudas. Y lo estoy recomendando a todos mis conocidos."</p>
+        <p class="test-author">María — Tripadvisor</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="logo-zone footer-logo-zone filled" data-zone="LOGO_02" onclick="highlightZone('LOGO_02')" style="width:140px;height:55px;background:transparent;border-color:#5bacd8;">
+          <span class="zone-tag" style="font-size:8px;padding:1px 4px;">LOGO_02</span>
+          <img src="assets/LOGO_01.png" alt="Hotel Waynay Killa" style="max-width:95%;max-height:85%;object-fit:contain;filter:brightness(0) invert(1);">
+        </div>
+        <p style="margin-top:12px;font-size:12px;color:#666;line-height:1.7;">Una escapada hacia un sitio tranquilo donde disfrutar del paisaje.</p>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>📍 Dirección del hotel<br>📞 +54 9 223 3-XXXXXX<br>✉️ reservas@tuhotel.com</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <p>Inicio · Habitaciones · Galería · Contacto</p>
+      </div>
+    </div>
+    <p class="footer-copy">© 2025 Tu Hotel — Todos los derechos reservados</p>
+  </footer>
+
+</div><!-- /mockup-page -->
+
+<script>
+const zones = [
+  { id: 'LOGO_01', name: 'Logo principal (nav)', dims: '320 × 120 px — PNG con fondo transparente', hint: 'Versión oscura/color del logo para fondo blanco' },
+  { id: 'LOGO_02', name: 'Logo footer', dims: '280 × 100 px — PNG con fondo transparente', hint: 'Versión blanca/clara del logo para fondo oscuro' },
+  { id: 'HERO_01', name: 'Imagen principal del hero', dims: '1920 × 560 px — JPG', hint: 'Vista panorámica del exterior o paisaje. Usar imagen de alta calidad, el sujeto principal debe estar centrado-inferior para que el texto encima sea legible.' },
+  { id: 'ABOUT_01', name: 'Foto institucional lateral', dims: '800 × 720 px — JPG', hint: 'Foto característica del establecimiento: jardín, exterior, animales, ambiente.' },
+  { id: 'HAB_01', name: 'Hab. Doble Premium', dims: '800 × 400 px — JPG', hint: 'Foto principal de la habitación, encuadre amplio mostrando cama y decoración.' },
+  { id: 'HAB_02', name: 'Hab. Doble Twin', dims: '800 × 400 px — JPG', hint: 'Foto principal de la habitación.' },
+  { id: 'HAB_03', name: 'Depto. Premium', dims: '800 × 400 px — JPG', hint: 'Foto del departamento, mostrar amplitud.' },
+  { id: 'HAB_04', name: 'Depto. Doble de Lujo', dims: '800 × 400 px — JPG', hint: 'Foto de la habitación.' },
+  { id: 'HAB_05', name: 'Depto. Triple de Lujo', dims: '800 × 400 px — JPG', hint: 'Foto de la habitación.' },
+  { id: 'HAB_06', name: 'Hab. Accesible', dims: '800 × 400 px — JPG', hint: 'Foto de la habitación, mostrar comodidades de accesibilidad.' },
+  { id: 'GAL_01', name: 'Galería — imagen 1', dims: '600 × 360 px — JPG', hint: 'Sugerido: exterior o paisaje' },
+  { id: 'GAL_02', name: 'Galería — imagen 2', dims: '600 × 360 px — JPG', hint: 'Sugerido: zona común o piscina' },
+  { id: 'GAL_03', name: 'Galería — imagen 3', dims: '600 × 360 px — JPG', hint: 'Sugerido: desayuno o comedor' },
+  { id: 'GAL_04', name: 'Galería — imagen 4', dims: '600 × 360 px — JPG', hint: 'Sugerido: actividades o entorno' },
+  { id: 'GAL_05', name: 'Galería — imagen 5', dims: '600 × 360 px — JPG', hint: 'Sugerido: detalle decorativo' },
+  { id: 'GAL_06', name: 'Galería — imagen 6', dims: '600 × 360 px — JPG', hint: 'Sugerido: vista nocturna o atardecer' },
+  { id: 'VIDEO_01', name: 'Video institucional', dims: 'MP4 o embed YouTube — formato 16:9', hint: 'Video de recorrido o presentación del hotel. Si es YouTube, entregar el ID del video.' },
+];
+
+const list = document.getElementById('legend-list');
+zones.forEach(z => {
+  const el = document.createElement('div');
+  el.className = 'legend-item';
+  el.id = 'leg-' + z.id;
+  el.innerHTML = `<div class="zone-id">${z.id}</div><div class="zone-desc">${z.name}</div><div class="zone-spec">${z.dims}</div>`;
+  el.onclick = () => {
+    highlightZone(z.id);
+    const target = document.querySelector(`[data-zone="${z.id}"]`);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+  list.appendChild(el);
+});
+
+let currentZone = null;
+function highlightZone(id) {
+  if (currentZone) {
+    const prev = document.querySelector(`[data-zone="${currentZone}"]`);
+    if (prev) prev.classList.remove('highlight');
+    const prevLeg = document.getElementById('leg-' + currentZone);
+    if (prevLeg) prevLeg.classList.remove('active');
+  }
+  if (currentZone === id) { currentZone = null; return; }
+  currentZone = id;
+  const el = document.querySelector(`[data-zone="${id}"]`);
+  if (el) el.classList.add('highlight');
+  const leg = document.getElementById('leg-' + id);
+  if (leg) { leg.classList.add('active'); leg.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+  const zoneData = zones.find(z => z.id === id);
+  if (zoneData && el) {
+    const rect = el.getBoundingClientRect();
+    const tip = document.getElementById('tooltip');
+    tip.innerHTML = `<strong>${zoneData.id}</strong><br>${zoneData.name}<br><span style="color:#aaa">${zoneData.dims}</span><br><em style="color:#ccc;font-size:11px">${zoneData.hint}</em>`;
+    tip.style.display = 'block';
+    tip.style.top = (rect.top + window.scrollY + 10) + 'px';
+    tip.style.left = Math.min(rect.left + 12, window.innerWidth - 280) + 'px';
+    setTimeout(() => { tip.style.display = 'none'; }, 4000);
+  }
+}
+
+let panelOpen = true;
+function togglePanel() {
+  panelOpen = !panelOpen;
+  document.getElementById('panel').classList.toggle('hidden', !panelOpen);
+  document.getElementById('mockup-page').classList.toggle('full-width', !panelOpen);
+  const btn = document.getElementById('toggle-panel');
+  if (panelOpen) { btn.style.right = '300px'; btn.classList.remove('closed'); btn.textContent = '◀ Panel'; }
+  else { btn.style.right = '0'; btn.classList.add('closed'); btn.textContent = '▶ Panel'; }
+}
+</script>
+</body>
+</html>
