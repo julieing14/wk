@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mockup — Web Hotel [Tu Proyecto]</title>
+<title>Web Hotel [prototipo]</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -162,7 +162,7 @@
   /* ── HERO ── */
   .hero {
     position: relative;
-    height: 560px;
+    height: 880px;
     overflow: hidden;
   }
   .hero .img-zone { width: 100%; height: 100%; }
@@ -178,12 +178,12 @@
     pointer-events: none;
   }
   .hero-title { font-size: 2.8rem; color: #fff; text-align: center; text-shadow: 0 2px 12px rgba(0,0,0,0.5); font-style: italic; }
-  .hero-subtitle { color: var(--brand-gold-light); font-family: 'Arial', sans-serif; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 12px; }
-  .hero-cta { margin-top: 24px; padding: 12px 32px; background: var(--brand-gold); color: #fff; font-family: 'Arial', sans-serif; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; border-radius: 2px; }
+  .hero-subtitle { color: var(--brand-gold-light); font-family: 'Arial', font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 12px; }
+  .hero-cta { margin-top: 24px; padding: 12px 32px; background: var(--brand-gold); color: #fff; font-family: 'Arial',  font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; border-radius: 2px; }
 
   /* ── SECCIONES GENERALES ── */
   section { padding: 4rem 2rem; }
-  .section-eyebrow { font-family: 'Arial', sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 0.5rem; }
+  .section-eyebrow { font-family: 'Arial', font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 0.5rem; }
   .section-title { font-size: 2rem; color: var(--brand-dark); margin-bottom: 1rem; }
   .section-body { font-size: 15px; color: #555; line-height: 1.8; max-width: 680px; }
 
@@ -191,7 +191,7 @@
   .about { background: var(--brand-cream); }
   .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; max-width: 1100px; margin: 0 auto; }
   .about-text .amenities { display: flex; gap: 2rem; margin-top: 2rem; }
-  .amenity { text-align: center; font-family: 'Arial', sans-serif; font-size: 12px; color: #666; }
+  .amenity { text-align: center; font-family: 'Arial', font-size: 12px; color: #666; }
   .amenity-icon { width: 48px; height: 48px; background: #e0d4c0; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
 
   /* ── HABITACIONES ── */
@@ -266,7 +266,7 @@
 <!-- PANEL LATERAL -->
 <aside id="panel">
   <h2>📋 Guía de recursos gráficos</h2>
-  <p style="font-family:Arial,sans-serif;font-size:11px;color:#888;margin-bottom:1rem;line-height:1.5;">Hacé clic en cualquier zona azul del mockup para destacarla, o usá esta lista para navegar.</p>
+  <p style="font-family:Arial, font-size:11px;color:#888;margin-bottom:1rem;line-height:1.5;">Hacé clic en cualquier zona azul del mockup para destacarla, o usá esta lista para navegar.</p>
   <div id="legend-list"></div>
   <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #ccc;font-family:Arial,sans-serif;font-size:10.5px;color:#999;line-height:1.6;">
     <strong style="color:#555;">Convención de nombres:</strong><br>
@@ -286,15 +286,12 @@
     <div>
       <a href="#">+54 9 381 457-2304</a>
       <a href="#">reservas@tuhotel.com</a>
-      <a href="#">Instagram</a> <a href="#">IG</a>
+      <a href="#">Instagram</a>
     </div>
   </div>
 
   <!-- NAV -->
   <nav class="nav">
-   <img src="https://drive.google.com/uc?export=view&id=13Tb-92cpVcAVp-lq5x_0tgi_7rLvKIQr" 
-       width="320" 
-       height="120">
     <div class="nav-links">
       <span>Inicio</span>
       <span>Habitaciones ▾</span>
@@ -324,15 +321,12 @@
         <h2 class="section-title">El nombre de tu hotel</h2>
         <p class="section-body">Texto institucional sobre la historia y propuesta del hotel. Esta sección es editorial — no requiere imágenes propias en el fondo, pero sí la foto lateral (ABOUT_01).</p>
         <div class="amenities">
-          <div class="amenity"><div class="amenity-icon">🍳</div>Desayuno buffet</div>
-          <div class="amenity"><div class="amenity-icon">🌿</div>Entorno natural</div>
-          <div class="amenity"><div class="amenity-icon">🏊</div>Pileta externa</div>
+          <div class="amenity"><div class="amenity-icon">🍳</div>Gatronomia</div>
+          <div class="amenity"><div class="amenity-icon">🌿</div>Sustentabilidad</div>
+          <div class="amenity"><div class="amenity-icon">🏊</div>Pileta climatizada y sauna</div>
         </div>
       </div>
-      <div class="img-zone" style="height:360px;border-radius:4px;" data-zone="ABOUT_01" onclick="highlightZone('ABOUT_01')">
-        <span class="zone-tag">ABOUT_01</span>
-        <div class="zone-info">
-          <div class="zone-icon">🖼️</div>
+     <div class="img-zone" style="height:360px;border-radius:4px;" data-zone="ABOUT_01" onclick="highlightZone('ABOUT_01')"><span class="zone-tag">ABOUT_01</span><div class="zone-info"><div class="zone-icon">🖼️</div><div class="zone-name">Foto institucional lateral</div><div class="zone-dims">800 × 720 px — JPG</div><div class="zone-hint">Exterior, jardín o ambiente característico del hotel</div></div><img src="https://lh3.googleusercontent.com/d/1RIvj-Q0EZVtSdglE_6ZMempijB-8RCr3" alt="Foto institucional lateral" style="width:100%;height:100%;object-fit:cover;border-radius:4px;"></div>
           <div class="zone-name">Foto institucional lateral</div>
           <div class="zone-dims">800 × 720 px — JPG</div>
           <div class="zone-hint">Exterior, jardín o ambiente característico del hotel</div>
